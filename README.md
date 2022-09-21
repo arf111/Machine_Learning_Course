@@ -1,2 +1,1 @@
-# Machine_Learning_Course
-Assignments and Project
+This is a machine learning library developed by K M Arefeen Sultan for CS5350/6350 in University of Utah
