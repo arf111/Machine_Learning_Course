@@ -118,5 +118,5 @@ class DecisionTree:
         """Evaluate the accuracy of the decision tree"""
         predictions = self.predictions(data)
         actual = data[label]
-        accuracy = sum(predictions == actual) / len(actual)
-        return accuracy
+        # average prediction error
+        return np.mean(predictions != actual)
