@@ -16,7 +16,8 @@ tree = DecisionTree(car_train_data, list(car_train_data.columns[:-1]), car_train
 car_test_data = pd.read_csv('car/test.csv')
 car_test_data.columns = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label']
 
-print(tree.evaluate(car_test_data, 'label'))
+print("Car Dataset Evaluation:")
+print(f"Avg prediction error: {tree.evaluate(car_test_data, 'label')}\n")
 
 # bank data training and testing
 
@@ -38,11 +39,13 @@ preprocessed_bank_train_df = preprocessing_bank_dataset(bank_train_data, numeric
 preprocessed_bank_test_df = preprocessing_bank_dataset(bank_test_data, numerical_thresholds, bank_numerical_columns)
 
 # build the decision tree
-bank_decision_tree = DecisionTree(preprocessed_bank_train_df, list(preprocessed_bank_train_df.columns[:-1]),
-                                  preprocessed_bank_train_df['y'], max_depth=1)
+bank_decision_tree_for_considering_unknown_values = DecisionTree(preprocessed_bank_train_df,
+                                                                 list(preprocessed_bank_train_df.columns[:-1]),
+                                                                 preprocessed_bank_train_df['y'], max_depth=1)
 
 # evaluate the test data
-print(bank_decision_tree.evaluate(preprocessed_bank_test_df, 'y'))
+print("Bank Dataset Evaluation (with unknown considered as value):")
+print(f"Avg prediction error: {bank_decision_tree_for_considering_unknown_values.evaluate(preprocessed_bank_test_df, 'y')}\n")
 
 # categorical columns with value unknown
 categorical_columns_with_unknown_values = ['job', 'education', 'contact', 'poutcome']
@@ -52,8 +55,11 @@ preprocessed_bank_train_df = fill_unknown_data(bank_train_data, categorical_colu
 preprocessed_bank_test_df = fill_unknown_data(bank_test_data, categorical_columns_with_unknown_values)
 
 # build the decision tree
-bank_decision_tree = DecisionTree(preprocessed_bank_train_df, list(preprocessed_bank_train_df.columns[:-1]),
-                                  preprocessed_bank_train_df['y'], max_depth=1)
+bank_decision_tree_for_replaced_unknown_values = DecisionTree(preprocessed_bank_train_df,
+                                                              list(preprocessed_bank_train_df.columns[:-1]),
+                                                              preprocessed_bank_train_df['y'], max_depth=1)
 
 # evaluate the test data
-print(bank_decision_tree.evaluate(preprocessed_bank_test_df, 'y'))
+print("Bank Dataset Evaluation (replacing unknown value):")
+print(
+    f"Avg prediction error: {bank_decision_tree_for_replaced_unknown_values.evaluate(preprocessed_bank_test_df, 'y')}")
