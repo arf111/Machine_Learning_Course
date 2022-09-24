@@ -3,11 +3,12 @@ import pandas as pd
 
 
 class DecisionTree:
-    def __init__(self, data, attributes, labels, max_depth):
+    def __init__(self, data, attributes, labels, max_depth, criterion='entropy'):
         self.data = data
         self.attributes = attributes
         self.labels = labels
         self.max_depth = max_depth
+        self.criteria = criterion
         self.tree = self.build_tree(data, attributes, labels)
 
     def build_tree(self, data: pd.DataFrame, attributes: list, labels: pd.Series, depth=0):
@@ -52,18 +53,30 @@ class DecisionTree:
         return attributes[gains.index(max(gains))]
 
     def information_gain(self, data: pd.DataFrame, labels: pd.Series, attribute: str):
-        # Calculate the entropy of the target values
-        entropy = self.entropy(labels)
+        first_term = 0
+        # Calculate the first term of Gain of the target values
+        if self.criteria == 'entropy':
+            first_term = self.entropy(labels)
+        elif self.criteria == 'gini':
+            first_term = self.gini_index(labels)
+        elif self.criteria == 'majority_error':
+            first_term = self.majority_error(labels)
+
         # Calculate the values and the corresponding counts for the selected attribute
         values, counts = np.unique(data[attribute], return_counts=True)
         # Calculate the weighted entropy for the attribute
         weighted_entropy = 0
 
         for value, count in zip(values, counts):
-            weighted_entropy += (count / len(data)) * self.entropy(labels[data[attribute] == value])
+            if self.criteria == 'entropy':
+                weighted_entropy += (count / len(data)) * self.entropy(labels[data[attribute] == value])
+            elif self.criteria == 'gini':
+                weighted_entropy += (count / len(data)) * self.gini_index(labels[data[attribute] == value])
+            else:
+                weighted_entropy += (count / len(data)) * self.majority_error(labels[data[attribute] == value])
 
         # Calculate the information gain
-        return entropy - weighted_entropy
+        return first_term - weighted_entropy
 
     def entropy(self, label: pd.Series):
         # Calculate the frequency of each unique value in the target
@@ -120,3 +133,7 @@ class DecisionTree:
         actual = data[label]
         # average prediction error
         return np.mean(predictions != actual)
+
+    def training_error(self, label: str):
+        """Calculate the training error of the decision tree"""
+        return self.evaluate(self.data, label)
