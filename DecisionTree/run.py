@@ -6,18 +6,22 @@ from decision_tree import DecisionTree
 # car data training and testing
 
 car_train_data = pd.read_csv('car/train.csv')
+car_test_data = pd.read_csv('car/test.csv')
 
+car_test_data.columns = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label']
 car_train_data.columns = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label']
 
 # build the decision tree
-tree = DecisionTree(car_train_data, list(car_train_data.columns[:-1]), car_train_data['label'], max_depth=6)
+for depth in range(1, 7):
+    for criteria in ['entropy', 'gini', 'majority']:
+        car_decision_tree = DecisionTree(car_train_data, list(car_train_data.columns[:-1]), car_train_data['label'],
+                                         max_depth=depth)
 
-# evaluate the test data
-car_test_data = pd.read_csv('car/test.csv')
-car_test_data.columns = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label']
+        print(f"Car Dataset Training Error depth:{depth}, and criteria:{criteria} =>")
+        print(car_decision_tree.training_error('label'))
 
-print("Car Dataset Evaluation:")
-print(f"Avg prediction error: {tree.evaluate(car_test_data, 'label')}\n")
+        print(f"Car Dataset Test Error depth:{depth}, and criteria:{criteria} =>")
+        print(f"Avg prediction error: {car_decision_tree.evaluate(car_test_data, 'label')}\n")
 
 # bank data training and testing
 
@@ -38,14 +42,18 @@ numerical_thresholds = bank_train_data[bank_numerical_columns].median()
 preprocessed_bank_train_df = preprocessing_bank_dataset(bank_train_data, numerical_thresholds, bank_numerical_columns)
 preprocessed_bank_test_df = preprocessing_bank_dataset(bank_test_data, numerical_thresholds, bank_numerical_columns)
 
-# build the decision tree
-bank_decision_tree_for_considering_unknown_values = DecisionTree(preprocessed_bank_train_df,
-                                                                 list(preprocessed_bank_train_df.columns[:-1]),
-                                                                 preprocessed_bank_train_df['y'], max_depth=1)
-
-# evaluate the test data
 print("Bank Dataset Evaluation (with unknown considered as value):")
-print(f"Avg prediction error: {bank_decision_tree_for_considering_unknown_values.evaluate(preprocessed_bank_test_df, 'y')}\n")
+# build the decision tree
+for depth in range(1, 17):
+    for criteria in ['entropy', 'gini', 'majority']:
+        bank_decision_tree = DecisionTree(preprocessed_bank_train_df, list(preprocessed_bank_train_df.columns[:-1]),
+                                          preprocessed_bank_train_df['y'], max_depth=depth)
+
+        print(f"Bank Dataset Training Error depth:{depth}, and criteria:{criteria} =>")
+        print(bank_decision_tree.training_error('y'))
+
+        print(f"Bank Dataset Test Error depth:{depth}, and criteria:{criteria} =>")
+        print(f"Avg prediction error: {bank_decision_tree.evaluate(preprocessed_bank_test_df, 'y')}\n")
 
 # categorical columns with value unknown
 categorical_columns_with_unknown_values = ['job', 'education', 'contact', 'poutcome']
@@ -54,12 +62,17 @@ categorical_columns_with_unknown_values = ['job', 'education', 'contact', 'poutc
 preprocessed_bank_train_df = fill_unknown_data(bank_train_data, categorical_columns_with_unknown_values)
 preprocessed_bank_test_df = fill_unknown_data(bank_test_data, categorical_columns_with_unknown_values)
 
+print("Bank Dataset Evaluation (with unknown replaced by most frequent value):")
 # build the decision tree
-bank_decision_tree_for_replaced_unknown_values = DecisionTree(preprocessed_bank_train_df,
-                                                              list(preprocessed_bank_train_df.columns[:-1]),
-                                                              preprocessed_bank_train_df['y'], max_depth=1)
+for depth in range(1, 17):
+    for criteria in ['entropy', 'gini', 'majority']:
+        bank_decision_tree_for_replaced_unknown_values = DecisionTree(preprocessed_bank_train_df,
+                                                                      list(preprocessed_bank_train_df.columns[:-1]),
+                                                                      preprocessed_bank_train_df['y'], max_depth=depth)
 
-# evaluate the test data
-print("Bank Dataset Evaluation (replacing unknown value):")
-print(
-    f"Avg prediction error: {bank_decision_tree_for_replaced_unknown_values.evaluate(preprocessed_bank_test_df, 'y')}")
+        print(f"Bank Dataset Training Error depth:{depth}, and criteria:{criteria} =>")
+        print(bank_decision_tree_for_replaced_unknown_values.training_error('y'))
+
+        print(f"Bank Dataset Test Error depth:{depth}, and criteria:{criteria} =>")
+        print(
+            f"Avg prediction error: {bank_decision_tree_for_replaced_unknown_values.evaluate(preprocessed_bank_test_df, 'y')}\n")
