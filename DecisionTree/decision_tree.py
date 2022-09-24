@@ -59,7 +59,7 @@ class DecisionTree:
             first_term = self.entropy(labels)
         elif self.criteria == 'gini':
             first_term = self.gini_index(labels)
-        elif self.criteria == 'majority_error':
+        else:
             first_term = self.majority_error(labels)
 
         # Calculate the values and the corresponding counts for the selected attribute
