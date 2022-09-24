@@ -17,7 +17,7 @@ car_error_table = np.zeros((6, 6))
 for depth in range(1, 7):
     for criteria in ['entropy', 'gini', 'majority']:
         car_decision_tree = DecisionTree(car_train_data, list(car_train_data.columns[:-1]), car_train_data['label'],
-                                         max_depth=depth)
+                                         max_depth=depth, criterion=criteria)
 
         training_error = car_decision_tree.training_error('label')
 
@@ -30,7 +30,7 @@ for depth in range(1, 7):
 car_report = pd.DataFrame(car_error_table, columns=['entropy_train', 'entropy_test', 'gini_train', 'gini_test', 'majority_train', 'majority_test'])
 car_report.insert(0, 'depth', value=np.arange(1, 7))
 print(car_report.to_string(index=False))
-# print(car_report.to_latex(index=False))
+print(car_report.to_latex(index=False))
 # bank data training and testing
 
 bank_train_data = pd.read_csv('bank/train.csv')
@@ -56,7 +56,7 @@ bank_error_table = np.zeros((16, 6))
 for depth in range(1, 17):
     for criteria in ['entropy', 'gini', 'majority']:
         bank_decision_tree = DecisionTree(preprocessed_bank_train_df, list(preprocessed_bank_train_df.columns[:-1]),
-                                          preprocessed_bank_train_df['y'], max_depth=depth)
+                                          preprocessed_bank_train_df['y'], max_depth=depth, criterion=criteria)
 
         training_error = bank_decision_tree.training_error('y')
 
@@ -69,7 +69,7 @@ for depth in range(1, 17):
 bank_report = pd.DataFrame(bank_error_table, columns=['entropy_train', 'entropy_test', 'gini_train', 'gini_test', 'majority_train', 'majority_test'])
 bank_report.insert(0, 'depth', value=np.arange(1, 17))
 print(bank_report.to_string(index=False))
-# print(bank_report.to_latex(index=False))
+print(bank_report.to_latex(index=False))
 # categorical columns with value unknown
 categorical_columns_with_unknown_values = ['job', 'education', 'contact', 'poutcome']
 
@@ -84,7 +84,8 @@ for depth in range(1, 17):
     for criteria in ['entropy', 'gini', 'majority']:
         bank_decision_tree_for_replaced_unknown_values = DecisionTree(preprocessed_bank_train_df,
                                                                       list(preprocessed_bank_train_df.columns[:-1]),
-                                                                      preprocessed_bank_train_df['y'], max_depth=depth)
+                                                                      preprocessed_bank_train_df['y'], max_depth=depth,
+                                                                      criterion=criteria)
 
         training_error = bank_decision_tree_for_replaced_unknown_values.training_error('y')
 
@@ -97,4 +98,4 @@ for depth in range(1, 17):
 bank_report = pd.DataFrame(bank_error_table, columns=['entropy_train', 'entropy_test', 'gini_train', 'gini_test', 'majority_train', 'majority_test'])
 bank_report.insert(0, 'depth', value=np.arange(1, 17))
 print(bank_report.to_string(index=False))
-# print(bank_report.to_latex(index=False))
+print(bank_report.to_latex(index=False))
