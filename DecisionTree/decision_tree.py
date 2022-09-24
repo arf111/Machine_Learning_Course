@@ -65,18 +65,18 @@ class DecisionTree:
         # Calculate the values and the corresponding counts for the selected attribute
         values, counts = np.unique(data[attribute], return_counts=True)
         # Calculate the weighted entropy for the attribute
-        weighted_entropy = 0
+        second_term = 0
 
         for value, count in zip(values, counts):
             if self.criteria == 'entropy':
-                weighted_entropy += (count / len(data)) * self.entropy(labels[data[attribute] == value])
+                second_term += (count / len(data)) * self.entropy(labels[data[attribute] == value])
             elif self.criteria == 'gini':
-                weighted_entropy += (count / len(data)) * self.gini_index(labels[data[attribute] == value])
+                second_term += (count / len(data)) * self.gini_index(labels[data[attribute] == value])
             else:
-                weighted_entropy += (count / len(data)) * self.majority_error(labels[data[attribute] == value])
+                second_term += (count / len(data)) * self.majority_error(labels[data[attribute] == value])
 
         # Calculate the information gain
-        return first_term - weighted_entropy
+        return first_term - second_term
 
     def entropy(self, label: pd.Series):
         # Calculate the frequency of each unique value in the target
