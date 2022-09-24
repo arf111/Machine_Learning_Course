@@ -44,11 +44,12 @@ bank_test_data.columns = bank_column_names
 # bank data numerical columns
 bank_numerical_columns = ['age', 'balance', 'day', 'duration', 'campaign', 'pdays', 'previous']
 # median of numerical attributes of bank train data
-numerical_thresholds = bank_train_data[bank_numerical_columns].median()
+train_numerical_thresholds = bank_train_data[bank_numerical_columns].median()
+test_numerical_thresholds = bank_test_data[bank_numerical_columns].median()
 
 #  consider unknown as category
-preprocessed_bank_train_df = preprocessing_bank_dataset(bank_train_data, numerical_thresholds, bank_numerical_columns)
-preprocessed_bank_test_df = preprocessing_bank_dataset(bank_test_data, numerical_thresholds, bank_numerical_columns)
+preprocessed_bank_train_df = preprocessing_bank_dataset(bank_train_data, train_numerical_thresholds, bank_numerical_columns)
+preprocessed_bank_test_df = preprocessing_bank_dataset(bank_test_data, test_numerical_thresholds, bank_numerical_columns)
 
 print("Bank Dataset Evaluation (with unknown considered as value):")
 bank_error_table = np.zeros((16, 6))
