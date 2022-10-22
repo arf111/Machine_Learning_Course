@@ -33,6 +33,7 @@ class StochasticGradientDescent:
 
         return cost
 
-    def predict(self, X):
-        y_approximated = np.dot(X, self.weights)
-        return y_approximated
+    def get_error(self, X: pd.DataFrame, y: pd.DataFrame):
+        y_predicted = np.dot(X, self.weights)
+        error = 0.5 * np.sum((y_predicted - y) ** 2)
+        return error
