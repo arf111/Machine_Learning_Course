@@ -7,7 +7,7 @@ import pandas as pd
 class StochasticGradientDescent:
     """Implement stochastic gradient descent for linear regression."""
 
-    def __init__(self, learning_rate=0.01):
+    def __init__(self, learning_rate=0.001):
         self.learning_rate = learning_rate
         self.weights = None
 
@@ -23,15 +23,17 @@ class StochasticGradientDescent:
 
         while weight_difference_norm_between_iterations > 0.000001:
             random_index = random.randint(0, n_samples - 1)
-            y_predicted = np.dot(X[random_index], self.weights)
-            dw = np.dot(X[random_index].T, (y_predicted - y[random_index]))
+            y_predicted = np.dot(X, self.weights)
+            error = 0.5 * np.sum((y_predicted - y) ** 2)
+
+            y_random_predicted = np.dot(X[random_index], self.weights)
+            dw = np.dot(X[random_index].T, (y_random_predicted - y[random_index]))
 
             weight_difference_norm_between_iterations = np.linalg.norm(
                 self.weights - (self.weights - self.learning_rate * dw))
 
             self.weights -= self.learning_rate * dw
 
-            error = 0.5 * np.sum((y_predicted - y[random_index]) ** 2)
             cost.append(error)
 
         return cost
