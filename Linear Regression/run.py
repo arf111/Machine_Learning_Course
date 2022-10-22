@@ -34,12 +34,12 @@ print('StochasticGradientDescent weights: ' + str(stochastic_gradient_descent.we
 
 fig1 = plt.figure(1)
 ax1 = plt.axes()
-ax1.plot(range(len(batch_gradient_descent_error)), batch_gradient_descent_error, c='b', label='Cost')
+ax1.plot(range(len(bgd_training_cost)), bgd_training_cost, c='b', label='Cost')
 ax1.set_title("Cost rate of Batch GD")
 
 fig2 = plt.figure(2)
 ax2 = plt.axes()
-ax2.plot(range(len(stochastic_gradient_descent_error)), stochastic_gradient_descent_error, c='b', label='Cost')
+ax2.plot(range(len(sgd_training_cost)), sgd_training_cost, c='b', label='Cost')
 ax2.set_title("Cost rate of Stochastic GD")
 
 # Analytical solution
