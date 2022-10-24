@@ -5,25 +5,37 @@ from DecisionTree.decision_tree import DecisionTree
 
 
 class Adaboost:
-    def __init__(self, data, attributes, labels, max_depth, num_trees, criterion='entropy'):
-        self.data = data
+    def __init__(self, train_data, test_data, attributes, labels, max_depth, num_trees, criterion='entropy'):
+        self.train_data = train_data
+        self.test_data = test_data
         self.attributes = attributes
         self.labels = labels
         self.max_depth = max_depth
         self.num_trees = num_trees
         self.criteria = criterion
-        self.trees = self.build_trees(data, attributes, labels, num_trees)
+        self.trees = self.build_trees(train_data, test_data, attributes, labels, num_trees)
 
-    def build_trees(self, data: pd.DataFrame, attributes: list, labels: pd.Series, num_trees: int):
+    def build_trees(self, train_data: pd.DataFrame, test_data: pd.DataFrame, attributes: list, labels: pd.Series,
+                    num_trees: int):
         # Initialize the weights of each example to 1/m
-        weights = np.ones(len(data)) / len(data)
+        weights = np.ones(len(train_data)) / len(train_data)
         trees = []
+        train_error = []
+        test_error = []
+        train_error_decision_tree = []
+        test_error_decision_tree = []
 
         for _ in range(num_trees):
+            # sample the data with replacement according to the weights
+            sample = train_data.sample(len(train_data), replace=True, weights=weights, ignore_index=True)
             # Build a decision tree with the weights
-            tree = DecisionTree(data, attributes, labels, self.max_depth, self.criteria)
+            tree = DecisionTree(sample, attributes, labels, self.max_depth, self.criteria)
             # Calculate the predictions of the tree
-            predictions = tree.predictions(data)
+            predictions = tree.predictions(train_data)
+            # calculate training error for the tree
+            train_error_decision_tree.append(tree.evaluate(train_data, 'label'))
+            # calculate testing error for the tree
+            test_error_decision_tree.append(tree.evaluate(test_data, 'label'))
             # Calculate the error of the tree
             error = np.sum(weights[predictions != labels])
             # Calculate the weight of the tree
@@ -35,9 +47,11 @@ class Adaboost:
             # Add the tree to the list of trees
             trees.append((tree, tree_weight))
             # train error
-            train_error = self.training_error(labels.name)
+            train_error.append(self.evaluate(train_data, 'y'))
+        #     text error
+            test_error.append(self.evaluate(test_data, 'y'))
 
-        return trees
+        return train_error_decision_tree, test_error_decision_tree, train_error, test_error
 
     def predict(self, row):
         """Predict the label of a row"""
@@ -57,7 +71,3 @@ class Adaboost:
         actual = data[label]
         # average prediction error
         return np.mean(predictions != actual)
-
-    def training_error(self, label: str):
-        """Calculate the training error of the decision tree"""
-        return self.evaluate(self.data, label)
