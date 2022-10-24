@@ -6,7 +6,7 @@ class RandomDecisionTree:
     def __init__(self, data, attributes, labels, max_depth, subset_size, criterion='entropy'):
         self.data = data
         self.attributes = attributes
-        self.labels = self.data['y']
+        self.labels = labels
         self.max_depth = max_depth
         self.criteria = criterion
         self.subset_size = subset_size

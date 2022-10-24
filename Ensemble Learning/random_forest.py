@@ -33,7 +33,7 @@ class RandomForest:
             # add the tree to the forest
             self.trees.append(tree)
             # calculate the training error
-            train_error.append(self.evaluate(samples, 'y'))
+            train_error.append(self.evaluate(self.train_data, 'y'))
             # calculate the test error
             test_error.append(self.evaluate(self.test_data, 'y'))
 
