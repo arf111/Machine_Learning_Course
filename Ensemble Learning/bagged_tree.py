@@ -1,32 +1,40 @@
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 from DecisionTree.decision_tree import DecisionTree
 
 
 class BaggedTree:
-    def __init__(self, data, attributes, labels, max_depth, num_trees, criterion='entropy'):
-        self.data = data
+    def __init__(self, train_data, test_data, attributes, labels, max_depth, num_trees, criterion='entropy'):
+        self.train_data = train_data
+        self.test_data = test_data
         self.attributes = attributes
         self.labels = labels
         self.max_depth = max_depth
         self.num_trees = num_trees
         self.criteria = criterion
-        self.trees = self.build_trees()
+        self.trees = []
+        self.train_error, self.test_error = self.build_trees()
 
     def build_trees(self):
         """Build a forest of decision trees"""
-        trees = []
+        train_error = []
+        test_error = []
+        subset_size = len(self.train_data)
 
-        for i in range(self.num_trees):
+        for _ in tqdm(range(self.num_trees)):
             # Create a bootstrap sample
-            bootstrap = self.data.sample(frac=1, replace=True)
+            bootstrap = self.train_data.sample(n=subset_size, replace=True)
             # Create a decision tree
-            tree = DecisionTree(bootstrap, self.attributes, self.labels, self.max_depth, self.criteria)
+            tree = DecisionTree(bootstrap, self.attributes, bootstrap['y'], self.max_depth, self.criteria)
             # Add the tree to the forest
-            trees.append(tree)
+            self.trees.append(tree)
+            # Calculate the training and testing error
+            train_error.append(self.evaluate(self.train_data, 'y'))
+            test_error.append(self.evaluate(self.test_data, 'y'))
 
-        return trees
+        return train_error, test_error
 
     def predict(self, row):
         """Predict the label of a row"""
@@ -47,7 +55,3 @@ class BaggedTree:
         actual = data[label]
         # average prediction error
         return np.mean(predictions != actual)
-
-    def training_error(self, label: str):
-        """Calculate the training error of the bagged tree"""
-        return self.evaluate(self.data, label)

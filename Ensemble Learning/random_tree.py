@@ -6,7 +6,7 @@ class RandomDecisionTree:
     def __init__(self, data, attributes, labels, max_depth, subset_size, criterion='entropy'):
         self.data = data
         self.attributes = attributes
-        self.labels = labels
+        self.labels = self.data['y']
         self.max_depth = max_depth
         self.criteria = criterion
         self.subset_size = subset_size
@@ -28,7 +28,7 @@ class RandomDecisionTree:
         # get samples uniformly with replacement
         samples = data.sample(n=self.subset_size, replace=True)
 
-        best_attribute = self.choose_attribute(samples, labels, attributes)
+        best_attribute = self.choose_attribute(samples, samples['y'], attributes)
         tree = {best_attribute: {}}  # Create a root node
 
         for value in set(data[best_attribute]):
@@ -69,13 +69,13 @@ class RandomDecisionTree:
         # Calculate the weighted entropy for the attribute
         second_term = 0
 
-        for value, count in zip(values, counts):
+        for value, count_val in zip(values, counts):
             if self.criteria == 'entropy':
-                second_term += (count / len(data)) * self.entropy(labels[data[attribute] == value])
+                second_term += (count_val / len(data)) * self.entropy(labels[data[attribute] == value])
             elif self.criteria == 'gini':
-                second_term += (count / len(data)) * self.gini_index(labels[data[attribute] == value])
+                second_term += (count_val / len(data)) * self.gini_index(labels[data[attribute] == value])
             else:
-                second_term += (count / len(data)) * self.majority_error(labels[data[attribute] == value])
+                second_term += (count_val / len(data)) * self.majority_error(labels[data[attribute] == value])
 
         # Calculate the information gain
         return first_term - second_term

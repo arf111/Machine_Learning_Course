@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 from DecisionTree.decision_tree import DecisionTree
 
@@ -13,53 +14,53 @@ class Adaboost:
         self.max_depth = max_depth
         self.num_trees = num_trees
         self.criteria = criterion
-        self.trees = self.build_trees(train_data, test_data, attributes, labels, num_trees)
+        self.trees = []
+        self.train_error_decision_tree, self.test_error_decision_tree, \
+        self.train_error, self.test_error = self.build_trees(train_data, test_data, attributes, labels, num_trees)
 
     def build_trees(self, train_data: pd.DataFrame, test_data: pd.DataFrame, attributes: list, labels: pd.Series,
                     num_trees: int):
         # Initialize the weights of each example to 1/m
         weights = np.ones(len(train_data)) / len(train_data)
-        trees = []
         train_error = []
         test_error = []
         train_error_decision_tree = []
         test_error_decision_tree = []
 
-        for _ in range(num_trees):
-            # sample the data with replacement according to the weights
-            sample = train_data.sample(len(train_data), replace=True, weights=weights, ignore_index=True)
-            # Build a decision tree with the weights
-            tree = DecisionTree(sample, attributes, labels, self.max_depth, self.criteria)
-            # Calculate the predictions of the tree
+        for _ in tqdm(range(num_trees)):
+            # Create a decision tree
+            # get samples uniformly with replacement
+            samples = self.train_data.sample(n=self.train_data.shape[0], replace=True, weights=weights)
+            # build a decision tree
+            tree = DecisionTree(samples, self.attributes, samples['y'], self.max_depth, self.criteria)
+            # Calculate the predictions of the decision tree
             predictions = tree.predictions(train_data)
-            # calculate training error for the tree
-            train_error_decision_tree.append(tree.evaluate(train_data, 'label'))
-            # calculate testing error for the tree
-            test_error_decision_tree.append(tree.evaluate(test_data, 'label'))
-            # Calculate the error of the tree
+            # Calculate the error of the decision tree
             error = np.sum(weights[predictions != labels])
-            # Calculate the weight of the tree
-            tree_weight = 0.5 * np.log((1 - error) / error)  # alpha_t
+            # Calculate the weight of the decision tree
+            weight = 0.5 * np.log((1 - error) / error)
             # Update the weights of the examples
-            weights *= np.exp(-tree_weight * labels * predictions)
+            weights = weights * np.exp(-weight * labels * predictions)
             # Normalize the weights
-            weights /= np.sum(weights)
-            # Add the tree to the list of trees
-            trees.append((tree, tree_weight))
-            # train error
+            weights = weights / np.sum(weights)
+            # Add the tree to the forest
+            self.trees.append((tree, weight))
+            # Calculate the training and testing error
+            train_error_decision_tree.append(tree.evaluate(train_data, 'y'))
+            test_error_decision_tree.append(tree.evaluate(test_data, 'y'))
             train_error.append(self.evaluate(train_data, 'y'))
-        #     text error
             test_error.append(self.evaluate(test_data, 'y'))
 
         return train_error_decision_tree, test_error_decision_tree, train_error, test_error
 
     def predict(self, row):
         """Predict the label of a row"""
-        # Calculate the weighted sum of the predictions of the trees
-        weighted_sum = np.sum(tree.predict(row) * weight for tree, weight in self.trees)
+        predictions = []
 
-        # Return the sign of the weighted sum
-        return np.sign(weighted_sum)
+        for tree, weight in self.trees:
+            predictions.append(weight * tree.predict(row))
+
+        return np.sign(sum(predictions))
 
     def predictions(self, data):
         """Predict the labels of a dataset"""
