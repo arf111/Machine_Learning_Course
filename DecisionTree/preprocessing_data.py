@@ -1,7 +1,7 @@
 from collections import Counter
 
 
-def preprocessing_bank_dataset(bank_df, numerical_thresholds, numerical_columns):
+def converting_numerical_to_binary(bank_df, numerical_thresholds, numerical_columns):
     # converting numerical data to binary in numerical columns of bank data
     for column in numerical_columns:
         bank_df[column] = bank_df[column].apply(lambda x: 0 if x <= numerical_thresholds[column] else 1)

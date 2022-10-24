@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from DecisionTree.preprocessing_data import preprocessing_bank_dataset, fill_unknown_data
+from DecisionTree.preprocessing_data import converting_numerical_to_binary, fill_unknown_data
 from decision_tree import DecisionTree
 
 # car data training and testing
@@ -48,8 +48,8 @@ train_numerical_thresholds = bank_train_data[bank_numerical_columns].median()
 test_numerical_thresholds = bank_test_data[bank_numerical_columns].median()
 
 #  consider unknown as category
-preprocessed_bank_train_df = preprocessing_bank_dataset(bank_train_data, train_numerical_thresholds, bank_numerical_columns)
-preprocessed_bank_test_df = preprocessing_bank_dataset(bank_test_data, test_numerical_thresholds, bank_numerical_columns)
+preprocessed_bank_train_df = converting_numerical_to_binary(bank_train_data, train_numerical_thresholds, bank_numerical_columns)
+preprocessed_bank_test_df = converting_numerical_to_binary(bank_test_data, test_numerical_thresholds, bank_numerical_columns)
 
 print("Bank Dataset Evaluation (with unknown considered as value):")
 bank_error_table = np.zeros((16, 6))

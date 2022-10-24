@@ -34,6 +34,8 @@ class Adaboost:
             weights /= np.sum(weights)
             # Add the tree to the list of trees
             trees.append((tree, tree_weight))
+            # train error
+            train_error = self.training_error(labels.name)
 
         return trees
 
