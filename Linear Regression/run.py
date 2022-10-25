@@ -36,11 +36,15 @@ fig1 = plt.figure(1)
 ax1 = plt.axes()
 ax1.plot(range(len(bgd_training_cost)), bgd_training_cost, c='b', label='Cost')
 ax1.set_title("Cost rate of Batch GD")
+plt.savefig("concrete_batch_gd.png")
 
 fig2 = plt.figure(2)
 ax2 = plt.axes()
 ax2.plot(range(len(sgd_training_cost)), sgd_training_cost, c='b', label='Cost')
 ax2.set_title("Cost rate of Stochastic GD")
+plt.legend()
+plt.savefig("concrete_stochastic_gd.png")
+plt.show()
 
 # Analytical solution
 analytical_gradient_descent = AnalyticalGradientDescent(X_train, y_train)
@@ -53,4 +57,4 @@ print(
 print('Error in SGD weight: ' + str(
     np.linalg.norm(stochastic_gradient_descent.weights - analytical_gradient_descent.weights)))
 
-plt.show()
+

@@ -42,31 +42,5 @@ ax2.plot(x, rf_2.train_error, c='b', label='Train Error')
 ax2.plot(x, rf_2.test_error, c='r', label='Test Error')
 ax2.set_title("Random Forest Error Set Size 2")
 plt.legend()
-plt.savefig("Random Forest Error Set Size 2")
-plt.show()
-
-rf_4 = RandomForest(preprocessed_bank_train_df, preprocessed_bank_test_df,
-                    list(preprocessed_bank_train_df.columns[:-1]),
-                    preprocessed_bank_train_df['y'], 16, T, 4)
-
-fig2 = plt.figure(2)
-ax3 = plt.axes()
-ax3.plot(x, rf_4.train_error, c='b', label='Train Error')
-ax3.plot(x, rf_4.test_error, c='r', label='Test Error')
-ax3.set_title("Random Forest Error Set Size 4")
-plt.legend()
-plt.savefig("Random Forest Error Set Size 4")
-plt.show()
-
-rf_6 = RandomForest(preprocessed_bank_train_df, preprocessed_bank_test_df,
-                    list(preprocessed_bank_train_df.columns[:-1]),
-                    preprocessed_bank_train_df['y'], 16, T, 6)
-
-fig3 = plt.figure(3)
-ax4 = plt.axes()
-ax4.plot(x, rf_6.train_error, c='b', label='Train Error')
-ax4.plot(x, rf_6.test_error, c='r', label='Test Error')
-ax4.set_title("Random Forest Error Set Size 6")
-plt.legend()
-plt.savefig("Random Forest Error Set Size 6")
+plt.savefig("Random Forest Error Set Size 2.png")
 plt.show()

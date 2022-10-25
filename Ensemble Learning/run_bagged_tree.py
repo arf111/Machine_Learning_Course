@@ -32,7 +32,7 @@ print("Bank Dataset Evaluation (with unknown considered as value):")
 T = 500
 
 bgt = BaggedTree(preprocessed_bank_train_df, preprocessed_bank_test_df, list(preprocessed_bank_train_df.columns[:-1]),
-                 preprocessed_bank_train_df['y'], 100, T)
+                 preprocessed_bank_train_df['y'], 100, T, subset_size=len(preprocessed_bank_train_df))
 
 x = range(1, T+1)
 

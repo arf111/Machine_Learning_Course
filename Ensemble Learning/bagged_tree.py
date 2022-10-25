@@ -6,7 +6,8 @@ from DecisionTree.decision_tree import DecisionTree
 
 
 class BaggedTree:
-    def __init__(self, train_data, test_data, attributes, labels, max_depth, num_trees, criterion='entropy'):
+    def __init__(self, train_data, test_data, attributes, labels, max_depth, num_trees, subset_size=None, replacement=True,
+                 criterion='entropy'):
         self.train_data = train_data
         self.test_data = test_data
         self.attributes = attributes
@@ -14,6 +15,8 @@ class BaggedTree:
         self.max_depth = max_depth
         self.num_trees = num_trees
         self.criteria = criterion
+        self.subset_size = subset_size
+        self.replace = replacement
         self.trees = []
         self.train_error, self.test_error = self.build_trees()
 
@@ -21,11 +24,10 @@ class BaggedTree:
         """Build a forest of decision trees"""
         train_error = []
         test_error = []
-        subset_size = len(self.train_data)
 
         for _ in tqdm(range(self.num_trees)):
             # Create a bootstrap sample
-            bootstrap = self.train_data.sample(n=subset_size, replace=True)
+            bootstrap = self.train_data.sample(n=self.subset_size, replace=self.replace)
             # Create a decision tree
             tree = DecisionTree(bootstrap, self.attributes, bootstrap['y'], self.max_depth, self.criteria)
             # Add the tree to the forest

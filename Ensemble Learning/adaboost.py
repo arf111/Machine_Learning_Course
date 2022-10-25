@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
 from tqdm import tqdm
 
 from DecisionTree.decision_tree import DecisionTree
@@ -38,13 +39,13 @@ class Adaboost:
             # Calculate the error of the decision tree
             error = np.sum(weights[predictions != labels])
             # Calculate the weight of the decision tree
-            weight = 0.5 * np.log((1 - error) / error)
+            alpha_t = 0.5 * np.log((1 - error) / error)
             # Update the weights of the examples
-            weights = weights * np.exp(-weight * labels * predictions)
+            weights = weights * np.exp(-alpha_t * labels * predictions)
             # Normalize the weights
             weights = weights / np.sum(weights)
             # Add the tree to the forest
-            self.trees.append((tree, weight))
+            self.trees.append((tree, alpha_t))
             # Calculate the training and testing error
             train_error_decision_tree.append(tree.evaluate(train_data, 'y'))
             test_error_decision_tree.append(tree.evaluate(test_data, 'y'))
@@ -57,10 +58,10 @@ class Adaboost:
         """Predict the label of a row"""
         predictions = []
 
-        for tree, weight in self.trees:
-            predictions.append(weight * tree.predict(row))
+        for tree, alpha_t in self.trees:
+            predictions.append(alpha_t * tree.predict(row))
 
-        return np.sign(sum(predictions))
+        return np.sign(np.sum(predictions))
 
     def predictions(self, data):
         """Predict the labels of a dataset"""
