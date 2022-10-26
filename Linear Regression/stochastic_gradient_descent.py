@@ -7,7 +7,7 @@ import pandas as pd
 class StochasticGradientDescent:
     """Implement stochastic gradient descent for linear regression."""
 
-    def __init__(self, learning_rate=0.005):
+    def __init__(self, learning_rate=0.01):
         self.learning_rate = learning_rate
         self.weights = None
 

@@ -26,10 +26,12 @@ y_test = test_df['label']
 
 bgd_training_cost = batch_gradient_descent.fit(X_train, y_train)
 batch_gradient_descent_error = batch_gradient_descent.get_error(X_test, y_test)
+print("BatchGradientDescent error: " + str(batch_gradient_descent_error))
 print('BatchGradientDescent weights: ' + str(batch_gradient_descent.weights))
 
 sgd_training_cost = stochastic_gradient_descent.fit(X_train, y_train)
 stochastic_gradient_descent_error = stochastic_gradient_descent.get_error(X_test, y_test)
+print("StochasticGradientDescent error: " + str(stochastic_gradient_descent_error))
 print('StochasticGradientDescent weights: ' + str(stochastic_gradient_descent.weights))
 
 fig1 = plt.figure(1)
