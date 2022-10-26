@@ -1,0 +1,1 @@
+Run the "run.sh" script to run the program. The program will run the linear regression algorithm on the data set and output the results to the console.

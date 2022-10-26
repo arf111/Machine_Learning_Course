@@ -1,0 +1,1 @@
+Run the run.sh script to run the program. The program will run the adaboost, bagged tree, random forest algorithm on bank and credit dataset.
