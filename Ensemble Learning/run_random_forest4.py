@@ -54,10 +54,10 @@ for _ in tqdm(range(100)):
                       preprocessed_bank_train_df['y'], 16, T, 6)
 
     single_tree = rf.trees[0]
-    y_hat = single_tree.predict(preprocessed_bank_test_df)
+    y_hat = single_tree.predictions(preprocessed_bank_test_df)
     y_pred_single_tree.append(y_hat)
 
-    y_hat = rf.predict(preprocessed_bank_test_df)
+    y_hat = rf.predictions(preprocessed_bank_test_df)
     y_pred_bagged_tree.append(y_hat[499])
 
 y_pred_single_tree = np.array(y_pred_single_tree)

@@ -53,10 +53,10 @@ for _ in tqdm(range(100)):
                      list(preprocessed_bank_train_df.columns[:-1]),
                      preprocessed_bank_train_df['y'], 16, T, subset_size=1000, replacement=False)
     single_tree = bgt.trees[0]
-    y_hat = single_tree.predict(preprocessed_bank_test_df)
+    y_hat = single_tree.predictions(preprocessed_bank_test_df)
     y_pred_single_tree.append(y_hat)
 
-    y_hat = bgt.predict(preprocessed_bank_test_df)
+    y_hat = bgt.predictions(preprocessed_bank_test_df)
     y_pred_bagged_tree.append(y_hat[499])
 
 y_pred_single_tree = np.array(y_pred_single_tree)
