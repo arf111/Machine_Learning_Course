@@ -15,6 +15,9 @@ class VotedPerceptron:
 
     def train(self, x: np.ndarray, y: np.ndarray, epochs: int):
         for _ in range(epochs):
+            idx = np.random.permutation(len(x))
+            x = x[idx]
+            y = y[idx]
             # update the weights
             for i in range(len(x)):
                 if y[i] * np.dot(x[i], self.weights) <= 0:

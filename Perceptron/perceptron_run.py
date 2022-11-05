@@ -37,7 +37,7 @@ voted_perceptron = VotedPerceptron(num_features=len(bank_note_train_dataframe.co
 voted_perceptron.train(x=trainX, y=trainY, epochs=10)
 
 print("\n------ Voted Perceptron -------")
-print("Learned weight vector: {}".format(voted_perceptron.weights))
+print("Learned weight vector: {}".format(voted_perceptron.voted_weights_array))
 print("Error rate on test set: ", voted_perceptron.evaluate(x=testX, y=testY))
 print("Learned count vector: {}".format(voted_perceptron.c_list))
 
