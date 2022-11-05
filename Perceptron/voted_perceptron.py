@@ -8,8 +8,8 @@ class VotedPerceptron:
         self.num_features = num_features
         self.learning_rate = learning_rate
         self.c = 0
-        self.c_list = [self.c]
-        self.voted_weights = [self.weights]
+        self.c_list = []
+        self.voted_weights = []
         self.voted_weights_array = None
         self.c_array = None
 
@@ -21,14 +21,13 @@ class VotedPerceptron:
             # update the weights
             for i in range(len(x)):
                 if y[i] * np.dot(x[i], self.weights) <= 0:
+                    self.voted_weights.append(self.weights)
+                    self.c_list.append(self.c)
                     self.weights = self.weights + self.learning_rate * y[i] * x[i]
                     self.weights_list.append(self.weights)
                     self.c = 1
                 else:
                     self.c += 1
-            self.voted_weights.append(self.weights)
-            self.c_list.append(self.c)
-
         self.c_array = np.array(self.c_list)
         self.voted_weights_array = np.array(self.voted_weights)
 

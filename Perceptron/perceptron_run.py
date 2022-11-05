@@ -38,8 +38,10 @@ voted_perceptron.train(x=trainX, y=trainY, epochs=10)
 
 print("\n------ Voted Perceptron -------")
 print("Learned weight vector: {}".format(voted_perceptron.voted_weights_array))
+print("Learned weight vector shape: {}".format(voted_perceptron.voted_weights_array.shape))
 print("Error rate on test set: ", voted_perceptron.evaluate(x=testX, y=testY))
-print("Learned count vector: {}".format(voted_perceptron.c_list))
+print("Learned count vector: {}".format(voted_perceptron.c_array))
+print("Learned count vector shape: {}".format(voted_perceptron.c_array.shape))
 
 # average perceptron
 
