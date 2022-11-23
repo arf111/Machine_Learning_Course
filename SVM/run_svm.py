@@ -33,7 +33,7 @@ testY[testY == 0] = -1
 print("------ Primal SVM --------")
 print('Using learning rate change with a:')
 for C in tqdm(C_list):
-    prim = Primal_SVM("lr_a", a, lr, C)
+    prim = Primal_SVM("lr_a", a, lr=lr, C=C)
     prim.fit(trainX, trainY, T)
     pred_train = prim.predict(trainX)
     pred_test = prim.predict(testX)
@@ -46,7 +46,7 @@ for C in tqdm(C_list):
 
 print('Using learning rate change with epoch:')
 for C in tqdm(C_list):
-    prim = Primal_SVM("lr_epoch", a, lr, C)
+    prim = Primal_SVM("lr_epoch", a, lr=lr, C=C)
     prim.fit(trainX, trainY)
     pred_train = prim.predict(trainX)
     pred_test = prim.predict(testX)
@@ -88,5 +88,5 @@ for gamma in tqdm(gamma_list):
         if C == 500/873:
             # print overlapping support vectors
             print("Number of overlapping support vectors: " + str(len(dual.overlapping_support_vectors)))
-            
+
         print()
