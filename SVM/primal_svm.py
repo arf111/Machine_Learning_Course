@@ -14,8 +14,9 @@ class Primal_SVM:
         self.learning_rate = lr
 
     def fit(self, X: np.ndarray, y: np.ndarray, epochs=100):
+        # add bias
         if self.bias:
-            X = np.hstack((X, np.ones((X.shape[0], 1))))
+            X = np.hstack((X, np.ones((X.shape[0], 1)))) 
         else:
             X = np.hstack((X, np.zeros((X.shape[0], 1))))
         
@@ -34,7 +35,7 @@ class Primal_SVM:
                 yi = y[i]
                 if yi * np.dot(xi, self.w) <= 1:
                     dw = np.append(self.w[:len(self.w)-1], 0) - self.C * n_samples * yi * xi
-                    self.w = self.w - self.learning_rate * dw
+                    self.w = self.w - lr_epoch * dw
                 else:
                     self.w[:len(self.w)-1] = (1-lr_epoch)*self.w[:len(self.w)-1]
 
