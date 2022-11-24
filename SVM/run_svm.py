@@ -81,6 +81,7 @@ for i in range(len(primal_svm_train_test_error["a"])):
     print('Difference: ' + str(primal_svm_train_test_error["a"][i]['test'] - primal_svm_train_test_error["epoch"][i]['test']))
 print()
 
+dual_svm_parameters = defaultdict(list)
 print("------ Dual SVM --------")
 for C in tqdm(C_list):
     dual = Dual_SVM("linear", C=C)
@@ -91,10 +92,19 @@ for C in tqdm(C_list):
     print('Train Error: ' + str(dual.evaluate(trainX, trainY)))
     print('Test Error: ' + str(dual.evaluate(testX, testY)))
     weights.append(np.append(dual.w, dual.b))
-    print("Weights and bias: ", dual.w, dual.b)
+    dual_svm_parameters["linear"].append(np.append(dual.w, dual.b))
     # print support vectors
     print("Number of support vectors: " + str(len(dual.support_vectors)))
     print()
+
+# difference between the two methods
+print('Difference of weights between the two methods of learning rate schedule:')
+for i in range(len(primal_svm_parameters["a"])):
+    print('C: ' + str(C_list[i]))
+    print('a Difference: ' + str(np.linalg.norm(primal_svm_parameters["a"][i] - dual_svm_parameters["linear"][i])))
+    print("epoch Difference: " + str(np.linalg.norm(primal_svm_parameters["epoch"][i] - dual_svm_parameters["linear"][i])))
+print()
+
 
 C_dict_for_500_873 = {}
 
