@@ -1,0 +1,1 @@
+Run the "run.sh" file to generate reports.
