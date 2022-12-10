@@ -17,12 +17,30 @@ trainY = bank_note_train_dataframe.iloc[:, -1].values
 lr = 0.001
 d = 0.01
 T = 100
-weights = []
-
+weights = None
 
 testX = bank_note_test_dataframe.iloc[:, :-1].values
 testY = bank_note_test_dataframe.iloc[:, -1].values
 
+# dummy_train_X = np.array([1.0,1.0])
+# dummy_train_Y = np.array([1.0])
+
+# dummy_train_X = dummy_train_X.reshape(1, -1)
+# dummy_train_Y = dummy_train_Y.reshape(1, -1)
+# # declare 2d numpy array with 
+# weights = [np.array([[-1.0, 1.0], # layer 1, (3,2)
+#                     [-2.0, 2.0],
+#                     [-3.0, 3.0]]), 
+#            np.array([[-1.0, 1.0], # layer 2, (3,2)
+#                     [-2.0, 2.0],
+#                     [-3.0, 3.0]]),
+#             np.array([[-1.0], 
+#                     [2.0], 
+#                     [-1.5]])] # layer 3, (3,1)
+
+# # Theory 3
+# nn_model = NeuralNetwork(dummy_train_X.shape[1], 2, "r", d=d, weights=weights, learning_rate=lr)
+# nn_model.train(dummy_train_X, dummy_train_Y, 1)
 
 # (2b)
 no_of_nodes = [5, 10, 25, 50, 100]

@@ -49,10 +49,13 @@ class NeuralNetwork:
                 for j in range(len(self.weights) - 1, 0, -1):  # 2 hidden layers and 1 output layer so we start from 1 and go to 0 (not including 0) with step -1 (decreasing)
                     delta.append(np.dot(delta[-1], self.weights[j][:-1, :].T) * self.sigmoid_derivative(activation_outputs[j+1]))  # delta for hidden layers is delta * weights * sigmoid_derivative
                 delta.reverse()  # reverse the list to match the order of the weights
-
+                
                 for j in range(len(self.weights)):
                     input_x = np.hstack((activation_outputs[j], np.ones(1)))  # add bias, shape = (no_of_nodes, )
-                    self.weights[j] -= lr_a * np.dot(input_x[:, np.newaxis], delta[j][np.newaxis, :])  # update weights
+                    # derivative of loss with respect to weights
+                    d_loss_w = np.dot(input_x[:, np.newaxis], delta[j][np.newaxis, :])  # shape = (no_of_nodes, no_of_nodes)
+                    # print("Layer: ", j, "d_loss_w: \n", d_loss_w)
+                    self.weights[j] -= lr_a * d_loss_w  # update weights
             # loss
             loss = 0
             for i in range(len(x)):
